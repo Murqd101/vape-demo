@@ -28,7 +28,12 @@ jobs:
 
       - name: List produced binaries
         run: |
-          dir /s /b *.exe || echo "No exe found"
+          $exes = Get-ChildItem -Path . -Recurse -Filter '*.exe' -ErrorAction SilentlyContinue
+          if ($exes) {
+            $exes | ForEach-Object { Write-Output $_.FullName }
+          } else {
+            Write-Output 'No exe found'
+          }
 
       - name: Upload exe artifacts
         uses: actions/upload-artifact@v4
