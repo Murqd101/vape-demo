@@ -15,6 +15,13 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
 
+      - name: Install vcpkg and freetype
+        run: |
+          git clone https://github.com/microsoft/vcpkg C:\vcpkg
+          C:\vcpkg\bootstrap-vcpkg.bat
+          C:\vcpkg\vcpkg.exe install freetype:x64-windows
+          C:\vcpkg\vcpkg.exe integrate install
+
       - name: Build solution (Release x64)
         run: |
           msbuild augov.sln /p:Configuration=Release /p:Platform=x64 /m
