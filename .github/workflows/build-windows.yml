@@ -1,0 +1,30 @@
+name: Build (Windows)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Build solution (Release x64)
+        run: |
+          msbuild augov.sln /p:Configuration=Release /p:Platform=x64 /m
+
+      - name: List produced binaries
+        run: |
+          dir /s /b *.exe || echo "No exe found"
+
+      - name: Upload exe artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: augov-exes
+          path: '**\\*.exe'
